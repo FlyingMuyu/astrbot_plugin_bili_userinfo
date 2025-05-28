@@ -1,4 +1,4 @@
-from astrbot.api.event import filter, AstrMessageEvent
+from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 from astrbot.api.message_components import Plain, Image
@@ -73,15 +73,16 @@ class BiliUserInfo(Star):
                         f"🆔 UID：{card.get('mid', '未知')}",
                         f"⭐ 等级：Lv{level_info.get('current_level', 0)}",
                         f"👤 性别：{'男' if card.get('sex') == '男' else '女' if card.get('sex') == '女' else '未知'}",
-                        f"💎 大会员状态：{self.parse_vip_type(vip_info.get('type'))}"
+                        f"💎 大会员状态：{self.parse_vip_type(vip_info.get('type', 1))}",
+                        f"💎 大会员等级：{vip_info.get('label', {}).get('text', '无会员')}"
                     ]
                     
                     # 添加基础信息
                     message_chain.append(Plain("\n".join(info_lines)))
 
-                    # 添加数据统计
+                    # 添加数据统计（带换行）
                     stats_lines = [
-                        f"📊 数据统计：",
+                        "",
                         f"👥 粉丝数：{self.format_number(user_data.get('follower', 0))}",
                         f"❤️ 关注数：{self.format_number(card.get('attention', 0))}",
                         f"📺 视频数：{self.format_number(user_data.get('archive_count', 0))}",
@@ -104,8 +105,8 @@ class BiliUserInfo(Star):
     def parse_vip_type(self, vip_type: int) -> str:
         """解析大会员类型"""
         vip_map = {
-            1: "无",
-            2: "有"
+            1: "无会员",
+            2: "有会员"
         }
         return vip_map.get(vip_type, "未知")
 
