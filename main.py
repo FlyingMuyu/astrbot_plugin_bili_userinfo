@@ -13,7 +13,7 @@ import json
 class BiliUserInfo(Star):
     def __init__(self, context: Context):
         super().__init__(context)
-        self.api_url = "http://api.bilibili.com/x/web-interface/card="
+        self.api_url = "http://api.bilibili.com/x/web-interface/card"
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AstrBotPlugin/1.0"
         }
@@ -73,7 +73,7 @@ class BiliUserInfo(Star):
                         f"🆔 UID：{card.get('mid', '未知')}",
                         f"⭐ 等级：Lv{level_info.get('current_level', 0)}",
                         f"👤 性别：{'男' if card.get('sex') == '男' else '女' if card.get('sex') == '女' else '未知'}",
-                        f"💎 大会员：{self.parse_vip_type(vip_info.get('type'))}"
+                        f"💎 大会员状态：{self.parse_vip_type(vip_info.get('type'))}"
                     ]
                     
                     # 添加基础信息
@@ -81,7 +81,7 @@ class BiliUserInfo(Star):
 
                     # 添加数据统计
                     stats_lines = [
-                        "📊 数据统计：",
+                        f"📊 数据统计：",
                         f"👥 粉丝数：{self.format_number(user_data.get('follower', 0))}",
                         f"❤️ 关注数：{self.format_number(card.get('attention', 0))}",
                         f"📺 视频数：{self.format_number(user_data.get('archive_count', 0))}",
@@ -104,9 +104,8 @@ class BiliUserInfo(Star):
     def parse_vip_type(self, vip_type: int) -> str:
         """解析大会员类型"""
         vip_map = {
-            0: "无",
-            1: "月度大会员",
-            2: "年度大会员"
+            1: "无",
+            2: "有"
         }
         return vip_map.get(vip_type, "未知")
 
